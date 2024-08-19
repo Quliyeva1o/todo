@@ -16,7 +16,7 @@ const Add = () => {
     setIsAddModalVisible(false);
   };
   const handleAddTodo = (values: Todo) => {
-    dispatch(addTodo({ ...values, created_at: new Date() }))
+    dispatch(addTodo({ ...values, created_at: new Date().toLocaleString() }))
       .then(() => {
         setIsAddModalVisible(false);
       })
