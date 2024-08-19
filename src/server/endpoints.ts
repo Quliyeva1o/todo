@@ -1,3 +1,3 @@
 export const endpoints={
-    todos:'/todos'
+    todos:'/todo'
 }

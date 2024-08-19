@@ -1,4 +1,5 @@
-import Home from "./pages/home";
+import { BrowserRouter as Router } from "react-router-dom";
+import AppRoutes from "./routes/routes";
 import { store } from "./store/store";
 import { Provider } from "react-redux";
 
@@ -6,7 +7,9 @@ function App() {
   return (
     <>
       <Provider store={store}>
-        <Home />
+       <Router>
+       <AppRoutes />
+       </Router>
       </Provider>
     </>
   );
