@@ -25,7 +25,8 @@ const Board: React.FC = () => {
       );
   };
 
-  const { handleDragStart, handleDropHook, handleDragOver } =useDragAndDrop(handleDrop);
+  const { handleDragStart, handleDropHook, handleDragOver } =
+    useDragAndDrop(handleDrop);
 
   const renderTodos = (isCompleted: boolean) => (
     <div
@@ -33,6 +34,10 @@ const Board: React.FC = () => {
       onDragOver={handleDragOver}
       onDrop={() => handleDropHook(isCompleted)}
     >
+      <h2 className={styles.columnTitle}>
+        {isCompleted ? "completed" : "not completed"}
+      </h2>
+
       {todos
         .filter((todo) => todo.completed === isCompleted)
         .map((todo) => (
@@ -40,7 +45,8 @@ const Board: React.FC = () => {
             key={todo.id}
             draggable
             onDragStart={() => handleDragStart(todo)}
-            className={styles.todoItem}>
+            className={styles.todoItem}
+          >
             {todo.title}
           </div>
         ))}
@@ -49,15 +55,8 @@ const Board: React.FC = () => {
 
   return (
     <Flex justify="space-between">
-      <div className={styles.columnContainer}>
-        <h2 className={styles.columnTitle}>Not Completed</h2>
-        {renderTodos(false)}
-      </div>
-
-      <div className={styles.columnContainer}>
-        <h2 className={styles.columnTitle}>Completed</h2>
-        {renderTodos(true)}
-      </div>
+      {renderTodos(false)}
+      {renderTodos(true)}
     </Flex>
   );
 };
