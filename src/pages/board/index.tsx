@@ -16,37 +16,37 @@ const Board: React.FC = () => {
   }, []);
 
   const handleDrop = (isCompleted: boolean, todo: Todo) => {
-    dispatch(
-      updateTodo({
-        id: todo.id,
-        updatedTodo: { ...todo, completed: isCompleted },
-      })
-    );
+    todo.completed != isCompleted &&
+      dispatch(
+        updateTodo({
+          id: todo.id,
+          updatedTodo: { ...todo, completed: isCompleted },
+        })
+      );
   };
 
-  const { handleDragStart, handleDropHook, handleDragOver } =
-    useDragAndDrop(handleDrop);
+  const { handleDragStart, handleDropHook, handleDragOver } =useDragAndDrop(handleDrop);
 
   const renderTodos = (isCompleted: boolean) => (
     <div
       className={styles.column}
       onDragOver={handleDragOver}
-      onDrop={() => handleDropHook(isCompleted)}>
+      onDrop={() => handleDropHook(isCompleted)}
+    >
       {todos
         .filter((todo) => todo.completed === isCompleted)
         .map((todo) => (
           <div
-          key={todo.id}
+            key={todo.id}
             draggable
             onDragStart={() => handleDragStart(todo)}
-            className={styles.todoItem}
-          >
+            className={styles.todoItem}>
             {todo.title}
           </div>
         ))}
     </div>
   );
-  
+
   return (
     <Flex justify="space-between">
       <div className={styles.columnContainer}>
