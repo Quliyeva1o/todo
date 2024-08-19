@@ -1,31 +1,46 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {fetchTodos, deleteTodo, updateTodo} from "../../store/slices/todoSlice";
+import {
+  fetchTodos,
+  deleteTodo,
+  updateTodo,
+} from "../../store/slices/todoSlice";
 import { AppDispatch, RootState } from "../../store/store";
-import {Table,Button,Popconfirm,Space,Modal,Form,Input,message} from "antd";
+import {
+  Table,
+  Button,
+  Popconfirm,
+  Modal,
+  Form,
+  Input,
+  message,
+  Spin,
+} from "antd";
 import { Todo } from "../../types";
-import { Spin } from "antd";
 import Add from "./components/add";
 import { Link } from "react-router-dom";
-import {Flex} from 'antd'
+import { Flex } from "antd";
+
 const Home = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { todos, loading, error } = useSelector((state: RootState) => state.todos);
+  const { todos, loading, error } = useSelector(
+    (state: RootState) => state.todos
+  );
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentTodo, setCurrentTodo] = useState<Todo | null>(null);
 
   useEffect(() => {
     dispatch(fetchTodos());
   }, [dispatch]);
-
+ 
   const handleEdit = (todo: Todo) => {
     setCurrentTodo(todo);
     setIsModalVisible(true);
   };
 
   const handleCancel = () => {
-    setIsModalVisible(false);
     setCurrentTodo(null);
+    setIsModalVisible(false);
   };
 
   const handleUpdate = (values: Todo) => {
@@ -37,8 +52,8 @@ const Home = () => {
         })
       )
         .then(() => {
-          setIsModalVisible(false);
           setCurrentTodo(null);
+          setIsModalVisible(false);
         })
         .catch(() => {
           message.error("Failed to update todo.");
@@ -66,21 +81,27 @@ const Home = () => {
       title: "Actions",
       key: "actions",
       render: (record: Todo) => (
-        <Space size="middle">
-          <Button type="primary" onClick={() => handleEdit(record)}>
-            Edit
-          </Button>
+        <div>
           <Popconfirm
             title="Are you sure to delete this todo?"
             onConfirm={() => dispatch(deleteTodo(record.id))}
             okText="Yes"
             cancelText="No"
           >
-            <Button type="primary" danger>
+            <Button type="primary" danger style={{ marginRight: 8 }}>
               Delete
             </Button>
           </Popconfirm>
-        </Space>
+        </div>
+      ),
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (record: Todo) => (
+        <Button type="primary" onClick={() => handleEdit(record)}>
+          Edit
+        </Button>
       ),
     },
   ];
@@ -89,13 +110,11 @@ const Home = () => {
     <div>
       {loading && <Spin size="large" fullscreen={true} />}
       {error && <p>Error: {error}</p>}
-      <Flex  gap={20} style={{padding:"20px"}}>
-      <Add />
-      <Link to="/board">
-        <Button type="primary">
-          board
-        </Button>
-      </Link>
+      <Flex gap={20} style={{ padding: "20px" }}>
+        <Add />
+        <Link to="/board">
+          <Button type="primary">board</Button>
+        </Link>
       </Flex>
       <Table dataSource={todos} columns={columns} rowKey="id" />
 
@@ -106,7 +125,10 @@ const Home = () => {
         footer={null}
       >
         {currentTodo && (
-          <Form initialValues={currentTodo} onFinish={handleUpdate}>
+          <Form
+            initialValues={{ title: currentTodo.title }}
+            onFinish={handleUpdate}
+          >
             <Form.Item
               label="Title"
               name="title"
@@ -115,7 +137,7 @@ const Home = () => {
               <Input />
             </Form.Item>
             <Form.Item>
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" htmlType="submit" >
                 Update
               </Button>
             </Form.Item>
