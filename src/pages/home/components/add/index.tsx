@@ -4,7 +4,6 @@ import { Button, Modal, Form, Input, message } from "antd";
 import { Todo } from "../../../../types";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../../store/store";
-import { Link } from "react-router-dom";
 
 const Add = () => {
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
@@ -31,11 +30,7 @@ const Add = () => {
       <Button type="primary" onClick={handleAdd} >
         Add Todo
       </Button>
-      <Link to="/board">
-        <Button type="primary">
-          board
-        </Button>
-      </Link>
+    
 
       <Modal
         title="Add Todo"

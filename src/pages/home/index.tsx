@@ -6,7 +6,8 @@ import {Table,Button,Popconfirm,Space,Modal,Form,Input,message} from "antd";
 import { Todo } from "../../types";
 import { Spin } from "antd";
 import Add from "./components/add";
-
+import { Link } from "react-router-dom";
+import {Flex} from 'antd'
 const Home = () => {
   const dispatch: AppDispatch = useDispatch();
   const { todos, loading, error } = useSelector((state: RootState) => state.todos);
@@ -88,7 +89,14 @@ const Home = () => {
     <div>
       {loading && <Spin size="large" fullscreen={true} />}
       {error && <p>Error: {error}</p>}
+      <Flex  gap={20} style={{padding:"20px"}}>
       <Add />
+      <Link to="/board">
+        <Button type="primary">
+          board
+        </Button>
+      </Link>
+      </Flex>
       <Table dataSource={todos} columns={columns} rowKey="id" />
 
       <Modal
