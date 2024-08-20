@@ -37,6 +37,7 @@ const Add = () => {
         open={isAddModalVisible}
         onCancel={handleCancel}
         footer={null}
+        destroyOnClose
       >
         <Form onFinish={handleAddTodo}>
           <Form.Item

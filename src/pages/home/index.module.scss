@@ -1,0 +1,13 @@
+
+.home{
+padding: 10px 40px;
+height: auto;
+.todoTable{
+    >div>div{
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+}
+}

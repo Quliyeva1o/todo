@@ -20,6 +20,7 @@ import { Todo } from "../../types";
 import Add from "./components/add";
 import { Link } from "react-router-dom";
 import { Flex } from "antd";
+import styles from "./index.module.scss";
 
 const Home = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -36,6 +37,8 @@ const Home = () => {
 
   useEffect(() => {
     if (currentTodo) {
+      console.log(currentTodo);
+      
       form.setFieldsValue({
         title: currentTodo.title,
       });
@@ -48,7 +51,6 @@ const Home = () => {
   };
 
   const handleCancel = () => {
-    setCurrentTodo(null);
     setIsModalVisible(false);
     form.resetFields();
   };
@@ -62,7 +64,6 @@ const Home = () => {
         })
       )
         .then(() => {
-          setCurrentTodo(null);
           setIsModalVisible(false);
           message.success("Todo updated successfully!");
         })
@@ -77,20 +78,34 @@ const Home = () => {
       title: "Todo Id",
       dataIndex: "id",
       key: "id",
+      sorter: (a: Todo, b: Todo) => a.id - b.id,
+
     },
     {
       title: "Todo Title",
       dataIndex: "title",
       key: "title",
+      
+    },
+    {
+      title: "Is Completed",
+      dataIndex: "completed",
+      key: "completed",
+      render: (completed: boolean) => (
+        <p>{completed ? "true" : "false"}</p>
+      ),
     },
     {
       title: "Created At",
       dataIndex: "created_at",
       key: "created_at",
+      sorter: (a: Todo, b: Todo) =>
+      new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
+
     },
     {
-      title: "Delete",
-      key: "delete",
+      title: "Actions",
+      key: "actions",
       render: (record: Todo) => (
         <div>
           <Popconfirm
@@ -103,22 +118,16 @@ const Home = () => {
               Delete
             </Button>
           </Popconfirm>
+          <Button type="primary" onClick={() => handleEdit(record)}>
+            Edit
+          </Button>
         </div>
-      ),
-    },
-    {
-      title: "Edit",
-      key: "edit",
-      render: (record: Todo) => (
-        <Button type="primary" onClick={() => handleEdit(record)}>
-          Edit
-        </Button>
       ),
     },
   ];
 
   return (
-    <div>
+    <div className={styles.home}>
       {loading && <Spin size="large" fullscreen={true} />}
       {error && <p>Error: {error}</p>}
       <Flex gap={20} style={{ padding: "20px" }}>
@@ -131,7 +140,9 @@ const Home = () => {
         dataSource={todos}
         columns={columns}
         rowKey="id"
-        pagination={{position: ["bottomCenter"] ,}}
+        pagination={{ position: ["bottomCenter"] }}
+        className={styles.todoTable}
+        bordered
       />
 
       <Modal
@@ -139,12 +150,14 @@ const Home = () => {
         open={isModalVisible}
         onCancel={handleCancel}
         footer={null}
+        destroyOnClose
       >
         {currentTodo && (
           <Form
             form={form}
             initialValues={{ title: currentTodo?.title }}
             onFinish={handleUpdate}
+            
           >
             <Form.Item
               label="Title"

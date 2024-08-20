@@ -5,7 +5,9 @@ import { AppDispatch, RootState } from "../../store/store";
 import useDragAndDrop from "../../hooks/useDragAndDrop";
 import { Todo } from "../../types";
 import styles from "./index.module.scss";
-import { Flex } from "antd";
+import { Button, Flex } from "antd";
+import { Link } from "react-router-dom";
+import { PieChart } from "@mui/x-charts/PieChart";
 
 const Board: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -25,13 +27,17 @@ const Board: React.FC = () => {
       );
   };
 
-  const { handleDragStart, handleDropHook, handleDragOver } =useDragAndDrop(handleDrop);
+  const { handleDragStart, handleDropHook, handleDragOver } =
+    useDragAndDrop(handleDrop);
 
   const renderTodos = (isCompleted: boolean) => (
     <div
-      className={`${styles.column} ${ isCompleted ? styles.completed : styles.notComp }`}
+      className={`${styles.column} ${
+        isCompleted ? styles.completed : styles.notComp
+      }`}
       onDragOver={handleDragOver}
-      onDrop={() => handleDropHook(isCompleted)}>
+      onDrop={() => handleDropHook(isCompleted)}
+    >
       <h2 className={styles.columnTitle}>
         {isCompleted ? "Completed" : "Not completed"}
       </h2>
@@ -51,10 +57,40 @@ const Board: React.FC = () => {
   );
 
   return (
-    <Flex justify="space-between">
-      {renderTodos(false)}
-      {renderTodos(true)}
-    </Flex>
+    <>
+      <div className={styles.board}>
+        <Link to={"/"} className={styles.homeBtn}>
+          <Button type="primary">home</Button>
+        </Link>
+        <PieChart
+          series={[
+            {
+              data: [
+                {
+                  id: 0,
+                  value: todos.filter((todo) => todo.completed === true).length,
+                  label: "completed",
+                  color: "green"
+                },
+                {
+                  id: 1,
+                  value: todos.filter((todo) => todo.completed === false)
+                    .length,
+                  label: "not completed",
+                  color:"rgb(249, 51, 51)"
+                },
+              ],
+            },
+          ]}
+          width={400}
+          height={200}
+        />
+        <Flex justify="space-between">
+          {renderTodos(false)}
+          {renderTodos(true)}
+        </Flex>
+      </div>
+    </>
   );
 };
 
