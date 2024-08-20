@@ -30,12 +30,14 @@ const Board: React.FC = () => {
 
   const renderTodos = (isCompleted: boolean) => (
     <div
-      className={styles.column}
+      className={`${styles.column} ${
+        isCompleted ? styles.completed : styles.notComp
+      }`}
       onDragOver={handleDragOver}
       onDrop={() => handleDropHook(isCompleted)}
     >
       <h2 className={styles.columnTitle}>
-        {isCompleted ? "completed" : "not completed"}
+        {isCompleted ? "Completed" : "Not completed"}
       </h2>
 
       {todos
@@ -47,7 +49,7 @@ const Board: React.FC = () => {
             onDragStart={() => handleDragStart(todo)}
             className={styles.todoItem}
           >
-            {todo.title}
+            <p> {todo.title}</p>{" "}
           </div>
         ))}
     </div>
