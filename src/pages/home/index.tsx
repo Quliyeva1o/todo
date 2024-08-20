@@ -15,6 +15,7 @@ import {
   Input,
   message,
   Spin,
+  Tag,
 } from "antd";
 import { Todo } from "../../types";
 import Add from "./components/add";
@@ -90,7 +91,9 @@ const Home = () => {
       title: "Is Completed",
       dataIndex: "completed",
       key: "completed",
-      render: (completed: boolean) => <p>{completed ? "true" : "false"}</p>,
+      render: (completed: boolean) => (
+        <Tag color={completed?" green":" red"}>{completed ? "true" : "false"}</Tag>
+      ),
     },
     {
       title: "Created At",
@@ -170,7 +173,7 @@ const Home = () => {
         handleCancel={handleCancel}
         handleFinish={handleUpdate}
         modalVisible={isModalVisible}
-        initialValues={{ title: currentTodo?.title || ""}}
+        initialValues={{ title: currentTodo?.title || "" }}
       />
     </div>
   );
