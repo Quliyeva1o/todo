@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { addTodo } from "../../../../store/slices/todoSlice";
-import { Button, Modal, Form, Input, message } from "antd";
+import { Button, message } from "antd";
 import { Todo } from "../../../../types";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../../store/store";
 import moment from "moment";
+import MyModal from "../modal";
 
 const Add = () => {
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const dispatch: AppDispatch = useDispatch();
+
   const handleAdd = () => {
     setIsAddModalVisible(true);
   };
@@ -16,45 +18,31 @@ const Add = () => {
   const handleCancel = () => {
     setIsAddModalVisible(false);
   };
+
   const handleAddTodo = (values: Todo) => {
-    dispatch(addTodo({ ...values, created_at: moment().format('YYYY-MM-DD HH:mm:ss') }))
+    dispatch(
+      addTodo({ ...values, created_at: moment().format("YYYY-MM-DD HH:mm:ss") })
+    )
       .then(() => {
         setIsAddModalVisible(false);
+        message.success("Todo added successfully!");
       })
       .catch(() => {
         message.error("Failed to add todo.");
       });
   };
-  
+
   return (
     <>
-      <Button type="primary" onClick={handleAdd} >
+      <Button type="primary" onClick={handleAdd}>
         Add Todo
       </Button>
-    
-
-      <Modal
-        title="Add Todo"
-        open={isAddModalVisible}
-        onCancel={handleCancel}
-        footer={null}
-        destroyOnClose
-      >
-        <Form onFinish={handleAddTodo}>
-          <Form.Item
-            label="Title"
-            name="title"
-            rules={[{ required: true, message: "Please input the title!" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              Add
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
+      <MyModal
+        modalVisible={isAddModalVisible}
+        handleCancel={handleCancel}
+        handleFinish={handleAddTodo}
+        initialValues={{ title: "" }} 
+      />
     </>
   );
 };

@@ -21,6 +21,7 @@ import Add from "./components/add";
 import { Link } from "react-router-dom";
 import { Flex } from "antd";
 import styles from "./index.module.scss";
+import MyModal from "./components/modal";
 
 const Home = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -38,7 +39,7 @@ const Home = () => {
   useEffect(() => {
     if (currentTodo) {
       console.log(currentTodo);
-      
+
       form.setFieldsValue({
         title: currentTodo.title,
       });
@@ -79,29 +80,24 @@ const Home = () => {
       dataIndex: "id",
       key: "id",
       sorter: (a: Todo, b: Todo) => a.id - b.id,
-
     },
     {
       title: "Todo Title",
       dataIndex: "title",
       key: "title",
-      
     },
     {
       title: "Is Completed",
       dataIndex: "completed",
       key: "completed",
-      render: (completed: boolean) => (
-        <p>{completed ? "true" : "false"}</p>
-      ),
+      render: (completed: boolean) => <p>{completed ? "true" : "false"}</p>,
     },
     {
       title: "Created At",
       dataIndex: "created_at",
       key: "created_at",
       sorter: (a: Todo, b: Todo) =>
-      new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
-
+        new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
     },
     {
       title: "Actions",
@@ -153,12 +149,7 @@ const Home = () => {
         destroyOnClose
       >
         {currentTodo && (
-          <Form
-            form={form}
-            initialValues={{ title: currentTodo?.title }}
-            onFinish={handleUpdate}
-            
-          >
+          <Form form={form} onFinish={handleUpdate}>
             <Form.Item
               label="Title"
               name="title"
@@ -174,6 +165,13 @@ const Home = () => {
           </Form>
         )}
       </Modal>
+
+      <MyModal
+        handleCancel={handleCancel}
+        handleFinish={handleUpdate}
+        modalVisible={isModalVisible}
+        initialValues={{ title: currentTodo?.title || ""}}
+      />
     </div>
   );
 };
