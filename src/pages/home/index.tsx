@@ -127,7 +127,12 @@ const Home = () => {
           <Button type="primary">Board</Button>
         </Link>
       </Flex>
-      <Table dataSource={todos} columns={columns} rowKey="id" />
+      <Table
+        dataSource={todos}
+        columns={columns}
+        rowKey="id"
+        pagination={{position: ["bottomCenter"] ,}}
+      />
 
       <Modal
         title="Edit Todo"
