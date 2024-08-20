@@ -28,11 +28,20 @@ const Home = () => {
   );
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentTodo, setCurrentTodo] = useState<Todo | null>(null);
+  const [form] = Form.useForm();
 
   useEffect(() => {
     dispatch(fetchTodos());
   }, [dispatch]);
- 
+
+  useEffect(() => {
+    if (currentTodo) {
+      form.setFieldsValue({
+        title: currentTodo.title,
+      });
+    }
+  }, [currentTodo, form]);
+
   const handleEdit = (todo: Todo) => {
     setCurrentTodo(todo);
     setIsModalVisible(true);
@@ -41,6 +50,7 @@ const Home = () => {
   const handleCancel = () => {
     setCurrentTodo(null);
     setIsModalVisible(false);
+    form.resetFields();
   };
 
   const handleUpdate = (values: Todo) => {
@@ -54,6 +64,7 @@ const Home = () => {
         .then(() => {
           setCurrentTodo(null);
           setIsModalVisible(false);
+          message.success("Todo updated successfully!");
         })
         .catch(() => {
           message.error("Failed to update todo.");
@@ -78,8 +89,8 @@ const Home = () => {
       key: "created_at",
     },
     {
-      title: "Actions",
-      key: "actions",
+      title: "Delete",
+      key: "delete",
       render: (record: Todo) => (
         <div>
           <Popconfirm
@@ -96,8 +107,8 @@ const Home = () => {
       ),
     },
     {
-      title: "Actions",
-      key: "actions",
+      title: "Edit",
+      key: "edit",
       render: (record: Todo) => (
         <Button type="primary" onClick={() => handleEdit(record)}>
           Edit
@@ -113,7 +124,7 @@ const Home = () => {
       <Flex gap={20} style={{ padding: "20px" }}>
         <Add />
         <Link to="/board">
-          <Button type="primary">board</Button>
+          <Button type="primary">Board</Button>
         </Link>
       </Flex>
       <Table dataSource={todos} columns={columns} rowKey="id" />
@@ -126,7 +137,8 @@ const Home = () => {
       >
         {currentTodo && (
           <Form
-            initialValues={{ title: currentTodo.title }}
+            form={form}
+            initialValues={{ title: currentTodo?.title }}
             onFinish={handleUpdate}
           >
             <Form.Item
@@ -134,10 +146,10 @@ const Home = () => {
               name="title"
               rules={[{ required: true, message: "Please input the title!" }]}
             >
-              <Input />
+              <Input name="title" />
             </Form.Item>
             <Form.Item>
-              <Button type="primary" htmlType="submit" >
+              <Button type="primary" htmlType="submit">
                 Update
               </Button>
             </Form.Item>
