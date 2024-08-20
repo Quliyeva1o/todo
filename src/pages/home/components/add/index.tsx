@@ -4,6 +4,7 @@ import { Button, Modal, Form, Input, message } from "antd";
 import { Todo } from "../../../../types";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../../store/store";
+import moment from "moment";
 
 const Add = () => {
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
@@ -16,7 +17,7 @@ const Add = () => {
     setIsAddModalVisible(false);
   };
   const handleAddTodo = (values: Todo) => {
-    dispatch(addTodo({ ...values, created_at: new Date().toLocaleString() }))
+    dispatch(addTodo({ ...values, created_at: moment().format('YYYY-MM-DD HH:mm:ss') }))
       .then(() => {
         setIsAddModalVisible(false);
       })
@@ -24,7 +25,7 @@ const Add = () => {
         message.error("Failed to add todo.");
       });
   };
-
+  
   return (
     <>
       <Button type="primary" onClick={handleAdd} >
